@@ -1,0 +1,25 @@
+{
+  "name": "quiz-app-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/shreeraj-shinde/quiz-app-backend.git",
+  "author": "jonasblues86 <jonasblues86@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.2",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "prisma": "^6.16.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
