@@ -1,27 +1,23 @@
 import express, { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { userRoutes } from "./routes/user.route";
+import { authRoutes } from "./routes/auth.route";
 
-
-const prisma = new PrismaClient();
 
 const app = express();
 const PORT = 5000;
 
 // Middleware
 app.use(express.json());
-import { userRoutes } from "./routes/user.route";
+
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-    const env = process.env.NODE_ENV;
-  res.send(`Hello TypeScript + Express + Yarn! ${env}`);
+    
+  res.send(`Hello TypeScript + Express + Yarn!`);
 });
 
-app.get("/users", async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-});
 
 // Start Server
 app.listen(PORT, () => {

@@ -5,10 +5,15 @@
   "repository": "https://github.com/shreeraj-shinde/quiz-app-backend.git",
   "author": "jonasblues86 <jonasblues86@gmail.com>",
   "license": "MIT",
-  "scripts": { "dev": "ts-node-dev --respawn --transpile-only src/index.ts", "build": "tsc", "start": "yarn prisma db push && yarn prisma generate && node dist/index.js" },
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "yarn prisma db push && yarn prisma generate && node dist/index.js"
+  },
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "sqlite3": "^5.1.7",
@@ -16,6 +21,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",

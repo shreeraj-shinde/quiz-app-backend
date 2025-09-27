@@ -23,11 +23,16 @@ export const loginController = async (req: Request, res: Response) => {
         if(!passwordMatch){
             return res.status(401).json({error:"Invalid password"});
         }
-        const token = jwt.sign({userId:user.id}, process.env.JWT_SECRET as string, {expiresIn:"1h"});
-        res.json({message:"Login successful", token}).status(200).cookie("token", token, {
-            httpOnly:true,
-            secure:process.env.NODE_ENV === "production",
-            sameSite:"strict",
+        const token = jwt.sign({userId:user.id}, process.env.JWT_SECRET!, {expiresIn:"1h"});
+        
+        // Set cookie first, then send response
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use secure in production
+            sameSite: "strict",
+            maxAge: 3600000 // 1 hour in milliseconds
+        }).status(200).json({
+            message: "Login successful",
         });
     }catch(error){
         res.status(500).json({error:"Internal server error"});

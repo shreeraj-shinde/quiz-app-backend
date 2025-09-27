@@ -11,3 +11,4 @@ authRouter.post("/login",validate(loginSchema), loginController);
 
 // Register route ✅
 authRouter.post("/register", validate(registerSchema), registerController);
+export { authRouter as authRoutes };
