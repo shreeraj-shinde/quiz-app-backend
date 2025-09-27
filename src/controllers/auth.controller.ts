@@ -28,14 +28,15 @@ export const loginController = async (req: Request, res: Response) => {
         // Set cookie first, then send response
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Use secure in production
+            secure: true, // Use secure in production
             sameSite: "strict",
             maxAge: 3600000 // 1 hour in milliseconds
         }).status(200).json({
             message: "Login successful",
         });
     }catch(error){
-        res.status(500).json({error:"Internal server error"});
+        
+        res.status(500).json({error:"Internal server error" });
     }
 }
 
