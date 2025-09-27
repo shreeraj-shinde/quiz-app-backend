@@ -1,13 +1,15 @@
 import express, { Request, Response } from "express";
 import { userRoutes } from "./routes/user.route";
 import { authRoutes } from "./routes/auth.route";
+import cookieParser from "cookie-parser";
 
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
