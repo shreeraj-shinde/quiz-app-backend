@@ -1,8 +1,10 @@
 import express, { Request, Response } from "express";
 import { userRoutes } from "./routes/user.route";
 import { authRoutes } from "./routes/auth.route";
+import { quizRoutes } from "./routes/quiz.route";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import setupSwagger from "./swagger";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -15,13 +17,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+// Swagger documentation
+setupSwagger(app);
+
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
-
-// Routes
-app.get("/", (req: Request, res: Response) => {
-  res.send(`Hello TypeScript + Express + Yarn!`);
-});
+app.use("/quiz", quizRoutes);
 
 // Start Server
 app.listen(PORT, () => {
