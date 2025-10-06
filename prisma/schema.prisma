@@ -9,8 +9,8 @@ generator client {
 // ---------------------
 
 datasource db {
-  provider = "postgresql" // Later you can switch to "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite" // Later you can switch to "postgresql"
+  url      = "file:./dev.db"
 }
 
 // ---------------------
@@ -46,18 +46,18 @@ model Quiz {
 
 // Each question belongs to a quiz
 model Question {
-  id     String       @id @default(uuid())
-  text   String
-  type   QuestionType @default(MCQ) // multiple types if you want
-  quizId String
-
-  quiz    Quiz     @relation(fields: [quizId], references: [id])
-  options Option[]
+  id        String       @id @default(uuid())
+  text      String
+  type      QuestionType @default(MCQ) // multiple types if you want
+  quizId    String
+  timeLimit Int          @default(60)
+  quiz      Quiz         @relation(fields: [quizId], references: [id])
+  options   Option[]
 }
 
 // Answer choices for each question
 model Option {
-  id         Int     @id @default(autoincrement())
+  id         String  @id @default(uuid())
   text       String
   isCorrect  Boolean @default(false)
   questionId String
@@ -92,4 +92,6 @@ enum QuestionType {
   MCQ
   TRUE_FALSE
   FILL_BLANK
+  DESCRIPTIVE
+  MCQ_MULTIPLE
 }
