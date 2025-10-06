@@ -70,12 +70,14 @@ quiz-app-backend/
 ## Local Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/shreeraj-shinde/quiz-app-backend.git
    cd quiz-app-backend
    ```
 
 2. **Install dependencies**
+
    ```bash
    yarn install
    ```
@@ -83,18 +85,21 @@ quiz-app-backend/
 3. **Create the `.env` file** (see [Environment Variables](#environment-variables)).
 
 4. **Generate the SQLite database & Prisma client**
+
    ```bash
    yarn prisma db push
    yarn prisma generate
    ```
 
 5. **Start the development server**
+
    ```bash
    yarn dev
    ```
+
    The API is available at `http://localhost:5000` by default. Swagger UI lives at `http://localhost:5000/docs`.
 
-6. *(Optional)* **Run the compiled build**
+6. _(Optional)_ **Run the compiled build**
    ```bash
    yarn build
    node dist/index.js
@@ -145,17 +150,16 @@ All responses are JSON. Unless noted, error payloads use the shape:
 ```json
 {
   "error": "Message describing the error",
-  "details": [
-    { "path": "field", "message": "Validation detail (optional)" }
-  ]
+  "details": [{ "path": "field", "message": "Validation detail (optional)" }]
 }
 ```
 
 ### Auth Routes
 
 - **POST `/auth/register`** – Register a new user (admin or regular).
+
   - **Required role:** Public.
-  - **Request:**
+  - **Request body (JSON):**
     ```json
     {
       "name": "Jane Admin",
@@ -173,7 +177,7 @@ All responses are JSON. Unless noted, error payloads use the shape:
 
 - **POST `/auth/login`** – Authenticate a user and retrieve a JWT.
   - **Required role:** Public.
-  - **Request:**
+  - **Request body (JSON):**
     ```json
     {
       "email": "jane@example.com",
@@ -198,7 +202,12 @@ All responses are JSON. Unless noted, error payloads use the shape:
 ### User Routes
 
 - **GET `/users/`** – Retrieve all users.
+
   - **Required role:** Authenticated (`ADMIN` or `USER`).
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     [
@@ -212,7 +221,12 @@ All responses are JSON. Unless noted, error payloads use the shape:
     ```
 
 - **GET `/users/profile`** – Fetch the current authenticated user profile.
+
   - **Required role:** Authenticated.
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     {
@@ -225,14 +239,21 @@ All responses are JSON. Unless noted, error payloads use the shape:
 
 - **GET `/users/:id`** – Fetch a specific user by ID.
   - **Required role:** Authenticated.
+  - **Path params:**
+    - `id`: string (user UUID)
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):** Same payload as `/users/profile`.
 
 ### Quiz Routes
 
 - **POST `/quiz/create`** – Create a quiz (admin-only).
+
   - **Required role:** `ADMIN`.
   - **Headers:** `Authorization: Bearer <token>` (or `token` cookie).
-  - **Request:**
+  - **Request body (JSON):**
     ```json
     {
       "title": "JavaScript Basics",
@@ -240,7 +261,7 @@ All responses are JSON. Unless noted, error payloads use the shape:
       "questions": [
         {
           "text": "Which statements about const variables are accurate?",
-          "type": "MCQ_MULTIPLE",
+          "type": "MCQ",
           "timeLimit": 120,
           "options": [
             { "text": "Must be initialized", "isCorrect": true },
@@ -255,8 +276,11 @@ All responses are JSON. Unless noted, error payloads use the shape:
   - **Success (201):** Returns the created quiz, including generated IDs.
 
 - **PATCH `/quiz/:id`** – Update quiz metadata or add questions.
+
   - **Required role:** `ADMIN`.
-  - **Request:**
+  - **Path params:**
+    - `id`: string (quiz UUID)
+  - **Request body (JSON):**
     ```json
     {
       "title": "Updated Quiz Title",
@@ -277,7 +301,14 @@ All responses are JSON. Unless noted, error payloads use the shape:
   - **Success (200):** Sanitized quiz (options omit `isCorrect`).
 
 - **DELETE `/quiz/:id`** – Delete a quiz.
+
   - **Required role:** `ADMIN`.
+  - **Path params:**
+    - `id`: string (quiz UUID)
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     {
@@ -286,7 +317,14 @@ All responses are JSON. Unless noted, error payloads use the shape:
     ```
 
 - **GET `/quiz/getQuestions/:id`** – Retrieve questions for a quiz without exposing answers.
+
   - **Required role:** Authenticated.
+  - **Path params:**
+    - `id`: string (quiz UUID)
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     [
@@ -306,7 +344,12 @@ All responses are JSON. Unless noted, error payloads use the shape:
     ```
 
 - **GET `/quiz/all`** – List all quizzes with attempted flag.
+
   - **Required role:** Authenticated.
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     [
@@ -320,7 +363,14 @@ All responses are JSON. Unless noted, error payloads use the shape:
     ```
 
 - **GET `/quiz/:id`** – Retrieve quiz details for the authenticated user.
+
   - **Required role:** Authenticated.
+  - **Path params:**
+    - `id`: string (quiz UUID)
+  - **Request body (JSON):**
+    ```json
+    {}
+    ```
   - **Success (200):**
     ```json
     {
@@ -348,7 +398,9 @@ All responses are JSON. Unless noted, error payloads use the shape:
 
 - **POST `/quiz/submit/:id`** – Submit quiz answers and receive a score.
   - **Required role:** `USER` (authenticated non-admin).
-  - **Request:**
+  - **Path params:**
+    - `id`: string (quiz UUID)
+  - **Request body (JSON):**
     ```json
     {
       "answers": [
@@ -358,6 +410,14 @@ All responses are JSON. Unless noted, error payloads use the shape:
             "<correct-option-id-1>",
             "<correct-option-id-2>"
           ]
+        },
+        {
+          "questionId": "<question-id>",
+          "selectedOptionId": "<single-correct-option-id>"
+        },
+        {
+          "questionId": "<question-id>",
+          "answer": "your short or descriptive answer"
         }
       ]
     }
@@ -419,6 +479,7 @@ All responses are JSON. Unless noted, error payloads use the shape:
 ## Deployment
 
 - **Production build:**
+
   1. Set environment variables (`PORT`, `DATABASE_URL`, `JWT_SECRET`, `NODE_ENV=production`).
   2. Install dependencies: `yarn install --production` (or `npm ci --omit dev`).
   3. Generate database schema and Prisma client:
@@ -430,10 +491,12 @@ All responses are JSON. Unless noted, error payloads use the shape:
   5. Start the server: `node dist/index.js` or `yarn start` (runs db push + generate + start).
 
 - **Database migrations:**
+
   - Use `yarn prisma migrate dev --name <migration-name>` during development.
   - Promote migrations with `yarn prisma migrate deploy` in production.
 
 - **Process management:**
+
   - Use PM2, systemd, or Docker to manage the Node process.
   - Ensure the `.env` is loaded (e.g., via systemd `EnvironmentFile` or Docker secrets).
 
